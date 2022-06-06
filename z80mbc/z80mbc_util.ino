@@ -52,7 +52,7 @@ void z80mbc_blink_ios_led(void) {
   unsigned long current_called = millis();
 
   if ((current_called - last_called) > 200) {
-    digitalWrite(PIN_LED_IOS, !digitalRead(PIN_LED_IOS));
+    digitalWrite(PIN_LED_IOS, digitalRead(PIN_LED_IOS) ? LOW : HIGH);
     last_called = current_called;
   }
 }

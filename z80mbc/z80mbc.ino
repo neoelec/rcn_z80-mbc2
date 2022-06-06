@@ -278,6 +278,8 @@ static void z80mbc_load_menu(struct ios *ios) {
 static void z80mbc_run_menu(struct ios *ios) {
   uint8_t cmd;
 
+  z80mbc_blink_ios_led();
+
   cmd = menu_cmd.UserRequest();
   if (cmd)
     menu_cmd.ExeCommand(cmd);
