@@ -15,11 +15,8 @@ struct ios_flag {
   };
 };
 
-extern uint8_t ios_flag_autoexec_en_get(const struct ios_flag *flag);
 extern void ios_flag_autoexec_en_set(struct ios_flag *flag, uint8_t autoexec_en);
-extern uint8_t ios_flag_rtc_en_get(const struct ios_flag *flag);
 extern void ios_flag_rtc_en_set(struct ios_flag *flag, uint8_t rtc_en);
-extern uint8_t ios_flag_tty_rx_last_empty_get(const struct ios_flag *flag);
 extern void ios_flag_tty_rx_last_empty_set(struct ios_flag *flag, uint8_t rx_last_empty);
 extern void ios_flag_setup(struct ios_flag *flag);
 

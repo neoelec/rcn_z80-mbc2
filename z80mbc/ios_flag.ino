@@ -1,16 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "inc/ios.h"
 
-uint8_t ios_flag_rtc_en_get(const struct ios_flag *flag) {
-  return flag->rtc_en;
-}
-
 void ios_flag_rtc_en_set(struct ios_flag *flag, uint8_t rtc_en) {
   flag->rtc_en = rtc_en;
-}
-
-uint8_t ios_flag_tty_rx_last_empty_get(const struct ios_flag *flag) {
-  return flag->rx_last_empty;
 }
 
 void ios_flag_tty_rx_last_empty_set(struct ios_flag *flag, uint8_t rx_last_empty) {
