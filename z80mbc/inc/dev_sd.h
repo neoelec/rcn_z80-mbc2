@@ -8,14 +8,6 @@
 #error "SD_CS_PIN should be 4 in pffArduino.h"
 #endif
 
-#if (_USE_DIR!=0)
-#error "_USE_DIR should be 0 in pffconf.h"
-#endif
-
-#if (_FS_FAT12!=0)
-#error "_FS_FAT12 should be 0 in pffconf.h"
-#endif
-
 #define DEV_SD_BUF_SZ     32
 
 enum {
