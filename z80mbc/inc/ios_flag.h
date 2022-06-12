@@ -4,13 +4,13 @@
 struct ios_flag {
   e8bit_io_dev io_dev;
   union {
-    uint8_t io_data;
+    uint8_t sys_flag;
     struct {
       uint8_t autoexec_en:1;
       uint8_t rtc_en:1;
       uint8_t rx_available:1;
       uint8_t rx_last_empty:1;
-      uint8_t reserved_0:4;
+      uint8_t __sys_flag_0:4;
     };
   };
 };

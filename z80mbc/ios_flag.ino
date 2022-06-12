@@ -18,7 +18,7 @@ static void ios_flag_read(struct e8bit_io_dev *io_dev, uint8_t *mem, uint16_t ad
 
   flag->rx_available = !!Serial.available();
 
-  ios->io_data = flag->io_data;
+  ios->io_data = flag->sys_flag;
   ios->io_command = E_IOS_NO_OPERATION;
 }
 
