@@ -3,22 +3,35 @@
 #include "inc/ios.h"
 #include "inc/z80mbc.h"
 
-void setup() {
-  struct ios *ios;
+static inline void __tty_eraly_console(void) {
   struct dev_tty *tty;
-  struct dev_user *user;
 
   tty = dev_tty_get_instance(); // init tty 1st to read logs
-  user = dev_user_get_instance();
+}
+
+static inline void __ios_setup(void) {
+  struct ios *ios;
 
   z80mbc_util_setup();
   ios = ios_get_instance();
   dev_install(ios);
+}
+
+static inline void __state_setup(void) {
+  struct dev_user *user;
+
+  user = dev_user_get_instance();
 
   if (dev_user_get_boot_selection(user))
     z80mbc_state_set(z80mbc_state_menu_load);
   else
     z80mbc_state_set(z80mbc_bl_load);
+}
+
+void setup() {
+  __tty_eraly_console();
+  __ios_setup();
+  __state_setup();
 }
 
 void loop() {
