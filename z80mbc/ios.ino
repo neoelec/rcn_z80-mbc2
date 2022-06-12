@@ -123,7 +123,7 @@ static inline void __loop(struct ios *ios) {
   __post_io(ios, io_type);
 }
 
-void z80mbc_ios_run(struct ios *ios) {
+void z80mbc_state_ios_run(struct ios *ios) {
   if (ios_cpu_get_nWAIT())
     return;
 

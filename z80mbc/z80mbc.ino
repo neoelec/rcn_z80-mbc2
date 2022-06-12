@@ -25,7 +25,7 @@ static inline void __state_setup(void) {
   if (dev_user_get_boot_selection(user))
     z80mbc_state_set(z80mbc_state_menu_load);
   else
-    z80mbc_state_set(z80mbc_bl_load);
+    z80mbc_state_set(z80mbc_state_bl_load);
 }
 
 void setup() {

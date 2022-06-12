@@ -99,14 +99,14 @@ static void __bl_flush_rx(void) {
     uint8_t dummy = Serial.read();
 }
 
-void z80mbc_bl_load(struct ios *ios) {
+void z80mbc_state_bl_load(struct ios *ios) {
   ios_cfg_print_cfg(&ios->cfg);
   Serial.println();
 
-  z80mbc_state_set(z80mbc_bl_run);
+  z80mbc_state_set(z80mbc_state_bl_run);
 }
 
-void z80mbc_bl_run(struct ios *ios) {
+void z80mbc_state_bl_run(struct ios *ios) {
   struct ios_cfg *cfg = &ios->cfg;
   static const char load_fmt[] PROGMEM = "MBC: Loading %s@0x%04X ...\n";
 
@@ -117,10 +117,10 @@ void z80mbc_bl_run(struct ios *ios) {
   __bl_load_file_image(cfg);
   Serial.println(F("     ... Done."));
 
-  z80mbc_state_set(z80mbc_bl_epilog);
+  z80mbc_state_set(z80mbc_state_bl_epilog);
 }
 
-void z80mbc_bl_epilog(struct ios *ios) {
+void z80mbc_state_bl_epilog(struct ios *ios) {
   __bl_hard_reset();
   ios_cpu_set_nWAIT_HIGH();
   ios_cpu_set_nRESET_LOW();
@@ -129,5 +129,5 @@ void z80mbc_bl_epilog(struct ios *ios) {
   __bl_flush_rx();
   ios_cpu_set_nRESET_HIGH();
 
-  z80mbc_state_set(z80mbc_ios_run);
+  z80mbc_state_set(z80mbc_state_ios_run);
 }

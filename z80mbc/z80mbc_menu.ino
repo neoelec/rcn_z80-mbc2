@@ -113,7 +113,7 @@ static void __menu_setup(void) {
     { txt_a, 'a', __menu_toggle_atuoexec_en },
     { txt_c, 'c', __menu_toggle_clock_mode },
     { txt_t, 't', __menu_adjust_rtc },
-    { txt_x, 'x',[](){ Serial.println(); z80mbc_state_set(z80mbc_bl_run); }},
+    { txt_x, 'x',[](){ Serial.println(); z80mbc_state_set(z80mbc_state_bl_run); }},
     { txt__, '?',[](){ menu_cmd.ShowMenu(); menu_cmd.giveCmdPrompt(); }}
   };
 

@@ -50,6 +50,6 @@ struct ios {
 };
 
 extern struct ios *ios_get_instance(void);
-extern void z80mbc_ios_run(struct ios *ios);
+extern void z80mbc_state_ios_run(struct ios *ios);
 
 #endif /* __IOS_H__ */
