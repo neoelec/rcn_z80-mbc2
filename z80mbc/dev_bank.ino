@@ -12,7 +12,7 @@ static void dev_bank_write(struct e8bit_io_dev *io_dev, uint8_t *mem, uint16_t a
     return;
 
   if (bank->num == ios->io_data)
-    return;
+    goto __done;
 
   bank->num = ios->io_data;
 
@@ -31,6 +31,7 @@ static void dev_bank_write(struct e8bit_io_dev *io_dev, uint8_t *mem, uint16_t a
       break;
   }
 
+__done:
   ios->io_command = E_IOS_NO_OPERATION;
   ios->io_handled = true;
 }
