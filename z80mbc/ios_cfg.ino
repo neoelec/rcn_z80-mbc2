@@ -53,19 +53,23 @@ static void __cfg_read_csv(struct ios_cfg *cfg, char *csv, const char *filename)
   } while (sz_read == DEV_SD_BUF_SZ);
 }
 
+#define __terminate_cstr(__str) __str[sizeof(__str) - 1] = '\0'
+
 static void ____cfg_parse_csv(struct ios_cfg *cfg, char *token, size_t i) {
   long tmp;
 
   switch (i) {
     case 0:                    // boot_name
-      strcpy(cfg->boot_name, token);
+      strncpy(cfg->boot_name, token, sizeof(cfg->boot_name));
+      __terminate_cstr(cfg->boot_name);
       break;
     case 1:                    // idx_built_in
       tmp = strtol(token, NULL, 10);
       cfg->idx_built_in = static_cast<int8_t>(tmp & 0xFF);
       break;
     case 2:                    // boot_file
-      strcpy(cfg->boot_file, token);
+      strncpy(cfg->boot_file, token, sizeof(cfg->boot_file));
+      __terminate_cstr(cfg->boot_file);
       break;
     case 3:                    // base_addr
       tmp = strtol(token, NULL, 16);
