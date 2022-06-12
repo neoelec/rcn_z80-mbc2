@@ -3,8 +3,6 @@
 #include "inc/ios.h"
 #include "inc/z80mbc.h"
 
-static void z80mbc_run(struct ios *ios);
-
 void setup() {
   struct ios *ios;
   struct dev_tty *tty;
@@ -34,8 +32,4 @@ void serialEvent() {
 
   if (Serial.available() && ios->cfg.use_interrupt)
     ios_cpu_set_nINT_LOW();
-}
-
-static void z80mbc_run(struct ios *ios) {
-  ios_loop(ios);
 }

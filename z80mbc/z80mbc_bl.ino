@@ -129,5 +129,5 @@ void z80mbc_bl_epilog(struct ios *ios) {
   __bl_flush_rx();
   ios_cpu_set_nRESET_HIGH();
 
-  z80mbc_state_set(z80mbc_run);
+  z80mbc_state_set(z80mbc_ios_run);
 }
