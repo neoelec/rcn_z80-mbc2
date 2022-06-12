@@ -4,19 +4,12 @@
 #define PIN_BANK1         11    // PD3 pin 17   RAM Memory bank address (High)
 #define PIN_BANK0         12    // PD4 pin 18   RAM Memory bank address (Low)
 
-static void dev_bank_write(struct e8bit_io_dev *io_dev, uint8_t *mem, uint16_t addr) {
-  struct dev_bank *bank = container_of(io_dev, struct dev_bank, io_dev);
-  struct ios *ios = bank->ios;
-
-  if (ios->io_command != E_IOS_WR_SETBANK)
+static inline void __bank_select(struct dev_bank *bank, uint8_t num) {
+  if (bank->num == num)
     return;
 
-  if (bank->num == ios->io_data)
-    goto __done;
-
-  bank->num = ios->io_data;
-
-  switch (bank->num) {
+  bank->num = num;
+  switch (num) {
     case 0:
       digitalWrite(PIN_BANK0, HIGH);
       digitalWrite(PIN_BANK1, LOW);
@@ -30,8 +23,17 @@ static void dev_bank_write(struct e8bit_io_dev *io_dev, uint8_t *mem, uint16_t a
       digitalWrite(PIN_BANK1, HIGH);
       break;
   }
+}
 
-__done:
+static void dev_bank_write(struct e8bit_io_dev *io_dev, uint8_t *mem, uint16_t addr) {
+  struct dev_bank *bank = container_of(io_dev, struct dev_bank, io_dev);
+  struct ios *ios = bank->ios;
+
+  if (ios->io_command != E_IOS_WR_SETBANK)
+    return;
+
+  __bank_select(bank, ios->io_data);
+
   ios->io_command = E_IOS_NO_OPERATION;
   ios->io_handled = true;
 }
