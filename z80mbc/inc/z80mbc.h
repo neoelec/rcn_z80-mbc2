@@ -5,6 +5,7 @@
 typedef int ssize_t;
 #endif
 
+#include "z80mbc_bl.h"
 #include "z80mbc_cfg.h"
 #include "z80mbc_menu.h"
 #include "z80mbc_state.h"
