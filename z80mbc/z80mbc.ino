@@ -14,8 +14,6 @@ static void z80mbc_run_boostrap(struct ios *ios);
 static void z80mbc_power_on(struct ios *ios);
 static void z80mbc_run(struct ios *ios);
 
-static void (*z80mbc_state)(struct ios * ios);
-
 void setup() {
   struct ios *ios;
   struct dev_tty *tty;
@@ -29,15 +27,15 @@ void setup() {
   dev_install(ios);
 
   if (dev_user_get_boot_selection(user))
-    z80mbc_state = z80mbc_load_menu;
+    z80mbc_state_set(z80mbc_load_menu);
   else
-    z80mbc_state = z80mbc_load_bootstrap;
+    z80mbc_state_set(z80mbc_load_bootstrap);
 }
 
 void loop() {
   struct ios *ios = ios_get_instance();
 
-  z80mbc_state(ios);
+  z80mbc_state_machine(ios);
 }
 
 void serialEvent() {
@@ -253,7 +251,7 @@ static void __boot_menu_setup(void) {
     { txt_a, 'a', __menu_toggle_atuoexec_en },
     { txt_c, 'c', __menu_toggle_clock_mode },
     { txt_t, 't', __menu_adjust_rtc },
-    { txt_x, 'x',[](){ Serial.println(); z80mbc_state = z80mbc_run_boostrap; }},
+    { txt_x, 'x',[](){ Serial.println(); z80mbc_state_set(z80mbc_run_boostrap); }},
     { txt__, '?',[](){ menu_cmd.ShowMenu(); menu_cmd.giveCmdPrompt(); }}
   };
 
@@ -272,7 +270,7 @@ static void z80mbc_load_menu(struct ios *ios) {
   ios_cfg_print_cfg(&ios->cfg);
   __boot_menu_setup();
 
-  z80mbc_state = z80mbc_run_menu;
+  z80mbc_state_set(z80mbc_run_menu);
 }
 
 static void z80mbc_run_menu(struct ios *ios) {
@@ -289,7 +287,7 @@ static void z80mbc_load_bootstrap(struct ios *ios) {
   ios_cfg_print_cfg(&ios->cfg);
   Serial.println();
 
-  z80mbc_state = z80mbc_run_boostrap;
+  z80mbc_state_set(z80mbc_run_boostrap);
 }
 
 static void z80mbc_run_boostrap(struct ios *ios) {
@@ -303,7 +301,7 @@ static void z80mbc_run_boostrap(struct ios *ios) {
   __bl_load_file_image(cfg);
   Serial.println(F("     ... Done."));
 
-  z80mbc_state = z80mbc_power_on;
+  z80mbc_state_set(z80mbc_power_on);
 }
 
 static void z80mbc_power_on(struct ios *ios) {
@@ -315,7 +313,7 @@ static void z80mbc_power_on(struct ios *ios) {
   __bl_flush_rx();
   ios_cpu_set_nRESET_HIGH();
 
-  z80mbc_state = z80mbc_run;
+  z80mbc_state_set(z80mbc_run);
 }
 
 static void z80mbc_run(struct ios *ios) {
