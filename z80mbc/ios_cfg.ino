@@ -44,13 +44,13 @@ static void __cfg_read_csv(struct ios_cfg *cfg, char *csv, const char *filename)
     dev_sd_hang_on_err(err, E_DEV_SD_OPEN, filename);
 
   do {
-    sz_read = dev_sd_read_raw(sd, sd->buf, DEV_SD_BUF_SZ);
+    sz_read = dev_sd_read_raw(sd, sd->buf, sizeof(sd->buf));
     if (sz_read < 0)
       break;
 
     memcpy(&csv[pos], sd->buf, sz_read);
     pos += sz_read;
-  } while (sz_read == DEV_SD_BUF_SZ);
+  } while (sz_read == sizeof(sd->buf));
 }
 
 #define __terminate_cstr(__str) __str[sizeof(__str) - 1] = '\0'
