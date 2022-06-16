@@ -93,7 +93,7 @@ static inline void __read_io(struct ios *ios, uint8_t io_type) {
   ios_bus_write(ios->io_data);
 }
 
-static inline void __busy_wati_for_reading(void) {
+static inline void __busy_wait_for_reading(void) {
   asm volatile ("nop");
   asm volatile ("nop");
 }
@@ -102,7 +102,7 @@ static inline void __post_io(struct ios *ios, uint8_t io_type) {
   if (io_type == IOS_ON_READ) {
     ios_bus_set_nBUSREQ_LOW();
     ios_cpu_set_nWAIT_LOW();
-    __busy_wati_for_reading();
+    __busy_wait_for_reading();
     ios_bus_release();
     ios_cpu_set_nWAIT_HIGH();
     ios_bus_set_nBUSREQ_HIGH();
