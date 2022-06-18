@@ -8,6 +8,7 @@ static uint8_t __user_read_key(struct dev_user *user) {
 
   user->led_status = digitalRead(PIN_USER);
 
+  digitalWrite(PIN_USER, HIGH); // forcely set high to speed up rising time
   pinMode(PIN_USER, INPUT_PULLUP);
   key_status = !digitalRead(PIN_USER);
 
