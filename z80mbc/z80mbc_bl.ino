@@ -108,12 +108,12 @@ void z80mbc_state_bl_load(struct ios *ios) {
 
 void z80mbc_state_bl_run(struct ios *ios) {
   struct ios_cfg *cfg = &ios->cfg;
-  static const char load_fmt[] PROGMEM = "MBC: Loading %s@0x%04X ...\n";
 
   __bl_hard_reset();
   ios_cpu_set_nWAIT_HIGH();
 
-  z80mbc_printf_P(load_fmt, cfg->boot_file, cfg->base_addr);
+  Serial.printf(F("MBC: Loading %s@0x%04X ..."), cfg->boot_file, cfg->base_addr);
+  Serial.println();
   __bl_load_file_image(cfg);
   Serial.println(F("     ... Done."));
 

@@ -104,21 +104,15 @@ static void __cfg_parse_csv(struct ios_cfg *cfg, char *csv) {
 }
 
 static void __cfg_print_csv(const struct ios_cfg *cfg) {
-  static const char fw_fmt_sd[] PROGMEM = "IOS: FW - %s (%s)";
-  static const char fw_fmt_bi[] PROGMEM = "IOS: FW - %s";
-  static const char disk_set_fmt[] PROGMEM = " / Disk-Set - %d\n";
-  static const char addr_fmt[] PROGMEM = "IOS: BASE@0x%04X / BOOT@%04X\n";
-
   if (cfg->idx_built_in < 0)
-    z80mbc_printf_P(fw_fmt_sd, cfg->boot_name, cfg->boot_file);
+    Serial.printf(F("IOS: FW - %s (%s)"), cfg->boot_name, cfg->boot_file);
   else
-    z80mbc_printf_P(fw_fmt_bi, cfg->boot_name);
+    Serial.printf(F("IOS: FW - %s"), cfg->boot_name);
 
-  if (cfg->disk_set < 0)
-    Serial.println();
-  else
-    z80mbc_printf_P(disk_set_fmt, cfg->disk_set);
+  if (cfg->disk_set >= 0)
+    Serial.printf(F(" / Disk-Set - %d"), cfg->disk_set);
 
+  Serial.println();
   Serial.print(F("IOS: IRQ TTY-RX -"));
   if (cfg->use_irq_tty_rx)
     Serial.println(F(" enabled"));
@@ -135,7 +129,6 @@ static void __cfg_print_autoexec_en(const struct ios_cfg *cfg) {
 }
 
 static void __cfg_print_clk_mode(const struct ios_cfg *cfg) {
-  static const char clk_fmt[] PROGMEM = "IOS: CLK - %lu.%03lu MHz";
   unsigned long khz;
 
   if (cfg->clock_mode)
@@ -143,7 +136,7 @@ static void __cfg_print_clk_mode(const struct ios_cfg *cfg) {
   else
     khz = F_CPU / 2 / 1000UL;
 
-  z80mbc_printf_P(clk_fmt, khz / 1000UL, khz % 1000UL);
+  Serial.printf(F("IOS: CLK - %lu.%03lu MHz"), khz / 1000UL, khz % 1000UL);
 }
 
 void ios_cfg_print_cfg(const struct ios_cfg *cfg) {
@@ -169,14 +162,14 @@ static void __cfg_load_from_csv(struct ios_cfg *cfg) {
 }
 
 void ios_cfg_print_boot_mode(struct ios_cfg *cfg) {
-  static const char bootmode_fmt[] PROGMEM = "%u - %s\n";
   struct ios_cfg dummy;
   size_t i;
 
   for (i = 0; i < cfg->nr_boot_mode; i++) {
     dummy.boot_mode = i;
     __cfg_load_from_csv(&dummy);
-    z80mbc_printf_P(bootmode_fmt, i, dummy.boot_name);
+    Serial.printf(F("%u - %s"), i, dummy.boot_name);
+    Serial.println();
   }
 }
 

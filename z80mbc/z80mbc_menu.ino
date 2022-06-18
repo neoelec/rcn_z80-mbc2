@@ -24,15 +24,14 @@ static void __menu_toggle_clock_mode(void) {
 }
 
 static void __menu_change_boot_mode(void) {
-  static const char input_fmt[] PROGMEM = "\nMBC: BOOT MODE [0-%d]";
-  static const char warn_fmt[] PROGMEM = "\nWrong Value %d. It should be 0 <= boot_mode <= %d\n";
   struct ios *ios = ios_get_instance();
   struct ios_cfg *cfg = &ios->cfg;
   String str_bm;
   int nr_boot_mode = ios_cfg_get_nr_boot_mode(cfg);
   long boot_mode;
 
-  z80mbc_printf_P(input_fmt, nr_boot_mode - 1);
+  Serial.println();
+  Serial.printf(F("MBC: BOOT MODE [0-%d]"), nr_boot_mode - 1);
   if (!menu_cmd.getStrValue(str_bm) || !str_bm.length()) {
     boot_mode = ios_cfg_get_boot_mode(cfg);
     goto __exit;
@@ -41,7 +40,10 @@ static void __menu_change_boot_mode(void) {
   boot_mode = str_bm.toInt();
 
   if (boot_mode < 0 || boot_mode >= nr_boot_mode) {
-    z80mbc_printf_P(warn_fmt, boot_mode, nr_boot_mode - 1);
+    Serial.println();
+    Serial.printf(F("Wrong Value %d. It should be 0 <= boot_mode <= %d"),
+        boot_mode, nr_boot_mode - 1);
+    Serial.println();
     goto __no_change;
   }
 

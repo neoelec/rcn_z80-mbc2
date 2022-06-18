@@ -4,9 +4,8 @@
 #include "inc/z80mbc.h"
 
 static void __rtc_print_date_time(DateTime &date_time) {
-  static const char date_time_fmt[] PROGMEM = "%02u/%02u/%04u %02u:%02u:%02u";
-
-  z80mbc_printf_P(date_time_fmt, date_time.day(), date_time.month(), date_time.year(),
+  Serial.printf(F("%02u/%02u/%04u %02u:%02u:%02u"),
+      date_time.day(), date_time.month(), date_time.year(),
       date_time.hour(), date_time.minute(), date_time.second());
 }
 

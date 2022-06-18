@@ -6,9 +6,7 @@
 #define DEV_SD_DISK_FMT   "DSxNyy.DSK"
 
 static void __sd_print_err_code(ssize_t err) {
-  static const char err_fmt[] PROGMEM = "DEV: SD error %u ";
-
-  z80mbc_printf_P(err_fmt, (unsigned int)err);
+  Serial.printf(F("DEV: SD error %u "), (unsigned int)err);
 
   switch (err) {
     case FR_OK:
@@ -64,11 +62,10 @@ static void __sd_print_err_operation(uint8_t operation) {
 }
 
 static void __sd_print_err_filename(const char *filename) {
-  if (filename) {
-    static const char fname_fmt[] PROGMEM = " - File : %s\n";
-    z80mbc_printf_P(fname_fmt, filename);
-  } else
-    Serial.println();
+  if (filename)
+    Serial.printf(F(" - File : %s"), filename);
+
+  Serial.println();
 }
 
 static void __sd_print_err(ssize_t err, uint8_t operation, const char *filename) {
