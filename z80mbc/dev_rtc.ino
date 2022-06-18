@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-#include "inc/CompiledDateTime.h"
 #include "inc/dev.h"
 #include "inc/z80mbc.h"
 
@@ -115,14 +114,13 @@ static inline void __rtc_init_on_unavailable(struct dev_rtc *rtc) {
 
 static struct dev_rtc *__rtc_get_instance(void) {
   static struct dev_rtc __rtc;
-  static CompiledDateTime cdt;
   struct dev_rtc *rtc = &__rtc;
   RTC_DS3231 &ds3231 = rtc->ds3231;
-  DateTime &compiled_date_time = rtc->compiled_date_time;
 
-  compiled_date_time = cdt.dateTime();
+  rtc->compiled_date_time = DateTime(__DATE__, __TIME__);
+
   Serial.print(F("DEV: Compiled Date/Time   - "));
-  __rtc_print_date_time(compiled_date_time);
+  __rtc_print_date_time(rtc->compiled_date_time);
   Serial.println();
 
   if (ds3231.begin())
