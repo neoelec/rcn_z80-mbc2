@@ -45,6 +45,6 @@ void loop() {
 void serialEvent() {
   struct ios *ios = ios_get_instance();
 
-  if (Serial.available() && ios->cfg.use_interrupt)
+  if (Serial.available() && ios->cfg.use_irq_tty_rx)
     ios_cpu_set_nINT_LOW();
 }

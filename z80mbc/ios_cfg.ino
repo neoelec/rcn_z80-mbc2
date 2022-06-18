@@ -83,9 +83,9 @@ static void ____cfg_parse_csv(struct ios_cfg *cfg, char *token, size_t i) {
       tmp = strtol(token, NULL, 10);
       cfg->disk_set = static_cast<int8_t>(tmp & 0xFF);
       break;
-    case 6:                    // use_interrupt
+    case 6:                    // use_irq_tty_rx
       tmp = strtol(token, NULL, 10);
-      cfg->use_interrupt = static_cast<uint8_t>(tmp & 0xFF);
+      cfg->use_irq_tty_rx = static_cast<uint8_t>(tmp & 0xFF);
       break;
   }
 }
@@ -119,8 +119,8 @@ static void __cfg_print_csv(const struct ios_cfg *cfg) {
   else
     z80mbc_printf_P(disk_set_fmt, cfg->disk_set);
 
-  Serial.print(F("IOS: serialEvent -"));
-  if (cfg->use_interrupt)
+  Serial.print(F("IOS: IRQ TTY-RX -"));
+  if (cfg->use_irq_tty_rx)
     Serial.println(F(" enabled"));
   else
     Serial.println(F(" disabled"));

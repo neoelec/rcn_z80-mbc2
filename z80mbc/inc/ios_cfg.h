@@ -13,7 +13,7 @@ struct ios_cfg {
   uint16_t boot_addr;
   uint16_t boot_size;
   int8_t disk_set;
-  uint8_t use_interrupt;
+  uint8_t use_irq_tty_rx;
 };
 
 extern void ios_cfg_print_boot_mode(struct ios_cfg *cfg);
