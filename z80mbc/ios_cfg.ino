@@ -165,7 +165,7 @@ void ios_cfg_print_boot_mode(struct ios_cfg *cfg) {
   for (i = 0; i < cfg->nr_boot_mode; i++) {
     dummy.boot_mode = i;
     __cfg_load_from_csv(&dummy);
-    Serial.printf(F("%u - %s"), i, dummy.boot_name);
+    Serial.printf(F("%2u - %s"), i, dummy.boot_name);
     Serial.println();
   }
 }
