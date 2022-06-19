@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+#include <avr/wdt.h>
+
 #include "inc/dev.h"
 #include "inc/ios.h"
 #include "inc/z80mbc.h"
@@ -100,6 +102,12 @@ static void __menu_list_boot_mode(void) {
   menu_cmd.giveCmdPrompt();
 }
 
+static void __menu_exit(void) {
+  Serial.println();
+  Serial.println(F("MBC: Reset ..."));
+  wdt_enable(WDTO_15MS);
+}
+
 static void __menu_setup(void) {
   static tMenuCmdTxt prompt[] = "";
   static tMenuCmdTxt txt_b[] = "b - Change Boot Mode";
@@ -115,7 +123,7 @@ static void __menu_setup(void) {
     { txt_a, 'a', __menu_toggle_atuoexec_en },
     { txt_c, 'c', __menu_toggle_clock_mode },
     { txt_t, 't', __menu_adjust_rtc },
-    { txt_x, 'x',[](){ Serial.println(); z80mbc_state_set(z80mbc_state_bl_run); }},
+    { txt_x, 'x', __menu_exit },
     { txt__, '?',[](){ menu_cmd.ShowMenu(); menu_cmd.giveCmdPrompt(); }}
   };
 
