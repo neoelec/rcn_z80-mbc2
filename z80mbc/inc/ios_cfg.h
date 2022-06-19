@@ -1,6 +1,8 @@
 #ifndef __IOS_CFG_H__
 #define __IOS_CFG_H__
 
+#define IOS_CLK_MODE_MAX  2
+
 struct ios_cfg {
   uint8_t nr_boot_mode;
   uint8_t boot_mode;

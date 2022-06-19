@@ -16,12 +16,40 @@ static void __menu_toggle_atuoexec_en(void) {
   menu_cmd.giveCmdPrompt();
 }
 
+static void __menu_print_freq(long clock_mode) {
+  unsigned long khz;
+
+  khz = F_CPU / 1000UL / ((clock_mode + 1) << 1);
+
+  Serial.println();
+  Serial.printf(F("%2ld - %lu.%03lu MHz"), clock_mode, khz / 1000UL, khz % 1000UL);
+}
+
 static void __menu_toggle_clock_mode(void) {
   struct ios *ios = ios_get_instance();
   struct ios_cfg *cfg = &ios->cfg;
+  String str_idx;
+  const long clock_mode_max = IOS_CLK_MODE_MAX;
+  long clock_mode = ios_cfg_get_clock_mode(cfg);
 
   Serial.println();
-  ios_cfg_set_clock_mode(cfg, !ios_cfg_get_clock_mode(cfg));
+  Serial.printf(F("MBC: CLK MODE [0-%ld]"), clock_mode_max);
+  for (unsigned int i = 0; i <= clock_mode_max; i++)
+    __menu_print_freq(i);
+
+  if (!menu_cmd.getStrValue(str_idx) || !str_idx.length())
+    goto __exit;
+
+  if (str_idx.toInt() > clock_mode_max)
+    goto __exit;
+
+  clock_mode = str_idx.toInt();
+
+__exit:
+  Serial.println();
+  __menu_print_freq(clock_mode);
+  Serial.println();
+  ios_cfg_set_clock_mode(cfg, static_cast<uint8_t>(clock_mode & 0xFF));
   menu_cmd.giveCmdPrompt();
 }
 
@@ -113,7 +141,7 @@ static void __menu_setup(void) {
   static tMenuCmdTxt txt_b[] = "b - Change Boot Mode";
   static tMenuCmdTxt txt_l[] = "l - List Boot Mode";
   static tMenuCmdTxt txt_a[] = "a - Toggle AUTOEXEC";
-  static tMenuCmdTxt txt_c[] = "c - Toggle CLK Mode";
+  static tMenuCmdTxt txt_c[] = "c - Select CLK Mode";
   static tMenuCmdTxt txt_t[] = "t - Adjust RTC";
   static tMenuCmdTxt txt_x[] = "x - Exit";
   static tMenuCmdTxt txt__[] = "? - Help";

@@ -29,7 +29,7 @@ static void __cfg_set_clock_mode(struct ios_cfg *cfg, uint8_t clock_mode) {
   cfg->clock_mode = clock_mode;
 
   EEPROM.update(CFG_CLOCK_MODE, clock_mode);
-  ios_clk_set_prescale(clock_mode ? 2 : 1);
+  ios_clk_set_prescale(clock_mode);
 }
 
 static void __cfg_read_csv(struct ios_cfg *cfg, char *csv, const char *filename) {
@@ -131,10 +131,7 @@ static void __cfg_print_autoexec_en(const struct ios_cfg *cfg) {
 static void __cfg_print_clk_mode(const struct ios_cfg *cfg) {
   unsigned long khz;
 
-  if (cfg->clock_mode)
-    khz = F_CPU / 4 / 1000UL;
-  else
-    khz = F_CPU / 2 / 1000UL;
+  khz = F_CPU / 1000UL / ((cfg->clock_mode + 1) << 1);
 
   Serial.printf(F("IOS: CLK - %lu.%03lu MHz"), khz / 1000UL, khz % 1000UL);
 }
@@ -176,7 +173,6 @@ void ios_cfg_print_boot_mode(struct ios_cfg *cfg) {
 uint8_t ios_cfg_get_nr_boot_mode(struct ios_cfg *cfg) {
   return cfg->nr_boot_mode;
 }
-
 
 uint8_t ios_cfg_get_boot_mode(struct ios_cfg *cfg) {
   return cfg->boot_mode;
@@ -262,13 +258,13 @@ static void __cfg_autoexec_en_setup(struct ios_cfg *cfg) {
 static void __cfg_clock_mode_setup(struct ios_cfg *cfg) {
   uint8_t clock_mode = EEPROM.read(CFG_CLOCK_MODE);
 
-  if (clock_mode > 1) {
-    clock_mode = 1;
+  if (clock_mode > IOS_CLK_MODE_MAX) {
+    clock_mode = IOS_CLK_MODE_MAX;
     __cfg_set_clock_mode(cfg, clock_mode);
   }
 
   cfg->clock_mode = clock_mode;
-  ios_clk_set_prescale(clock_mode ? 2 : 1);
+  ios_clk_set_prescale(clock_mode);
 }
 
 void ios_cfg_setup(struct ios_cfg *cfg) {

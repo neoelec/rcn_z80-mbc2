@@ -5,7 +5,7 @@
 #define PIN_CLK           15    // PD7 pin 21   Z80 CLK
 
 void ios_clk_set_prescale(uint16_t scale) {
-  OCR2 = static_cast<uint8_t>(scale - 1);
+  OCR2 = static_cast<uint8_t>(scale & 0xFF);
 }
 
 void ios_clk_enable(void) {
