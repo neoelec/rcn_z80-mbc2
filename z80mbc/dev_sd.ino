@@ -5,6 +5,9 @@
 #define DEV_SD_DISK_MAX   99
 #define DEV_SD_DISK_FMT   "DSxNyy.DSK"
 
+#define DEV_SD_DISK_SECT_CNT  32
+#define DEV_SD_DISK_TRACK_CNT 512
+
 static void __sd_print_err_code(ssize_t err) {
   Serial.printf(F("DEV: SD error %u "), (unsigned int)err);
 
@@ -152,7 +155,7 @@ static inline void __sd_read_READSECT_lseek(struct dev_sd *sd) {
   if (sd->disk_err)
     return;
 
-  if ((sd->track_sel < 512) && (sd->sect_sel < 32)) {
+  if ((sd->track_sel < DEV_SD_DISK_TRACK_CNT) && (sd->sect_sel < DEV_SD_DISK_SECT_CNT)) {
     ssize_t err;
 
     sd->disk_err = 0;
@@ -199,7 +202,7 @@ static void __sd_read_READSECT(struct dev_sd *sd, struct ios *ios) {
   __sd_read_READSECT_read(sd, ios, sz_to_read);
   __sd_read_READSECT_transfer(sd, ios, sz_to_read);
 
-  if (ios->io_count >= 511) {
+  if (ios->io_count >= (DEV_SD_DISK_TRACK_CNT - 1)) {
     ios->io_command = E_IOS_NO_OPERATION;
   }
 
@@ -265,10 +268,10 @@ static void __sd_write_SELTRACK(struct dev_sd *sd, struct ios *ios) {
   sd->disk_err = 0;
   sd->track_sel = (static_cast<uint16_t>(ios->io_data) << 8) | lowByte(sd->track_sel);
 
-  if (sd->track_sel >= 512)
+  if (sd->track_sel >= DEV_SD_DISK_TRACK_CNT)
     sd->disk_err = E_DISK_ILL_TRACK_NUM;
 
-  if (sd->track_sel >= 32)
+  if (sd->track_sel >= DEV_SD_DISK_SECT_CNT)
     sd->disk_err = E_DISK_ILL_SECT_NUM;
 
   ios->io_command = E_IOS_NO_OPERATION;
@@ -281,10 +284,10 @@ static void __sd_write_SELSECT(struct dev_sd *sd, struct ios *ios) {
   sd->disk_err = 0;
   sd->sect_sel = ios->io_data;
 
-  if (sd->track_sel >= 512)
+  if (sd->track_sel >= DEV_SD_DISK_TRACK_CNT)
     sd->disk_err = E_DISK_ILL_TRACK_NUM;
 
-  if (sd->sect_sel >= 32)
+  if (sd->sect_sel >= DEV_SD_DISK_SECT_CNT)
     sd->disk_err = E_DISK_ILL_SECT_NUM;
 }
 
