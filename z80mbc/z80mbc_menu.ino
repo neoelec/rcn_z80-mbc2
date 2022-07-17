@@ -124,9 +124,7 @@ static void __menu_list_boot_mode(void) {
   struct ios_cfg *cfg = &ios->cfg;
 
   Serial.println();
-
   ios_cfg_print_boot_mode(cfg);
-
   menu_cmd.giveCmdPrompt();
 }
 
@@ -152,7 +150,7 @@ static void __menu_setup(void) {
     { txt_c, 'c', __menu_change_clock_mode },
     { txt_t, 't', __menu_adjust_rtc },
     { txt_x, 'x', __menu_exit },
-    { txt__, '?',[](){ menu_cmd.ShowMenu(); menu_cmd.giveCmdPrompt(); }}
+    { txt__, '?', [](){ menu_cmd.ShowMenu(); menu_cmd.giveCmdPrompt(); }}
   };
 
   if (!menu_cmd.begin(menu_list, ARRAY_SIZE(menu_list), prompt)) {
