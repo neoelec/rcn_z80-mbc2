@@ -25,7 +25,7 @@ static void __menu_print_freq(long clock_mode) {
   Serial.printf(F("%2ld - %lu.%03lu MHz"), clock_mode, khz / 1000UL, khz % 1000UL);
 }
 
-static void __menu_toggle_clock_mode(void) {
+static void __menu_change_clock_mode(void) {
   struct ios *ios = ios_get_instance();
   struct ios_cfg *cfg = &ios->cfg;
   String str_idx;
@@ -149,7 +149,7 @@ static void __menu_setup(void) {
     { txt_b, 'b', __menu_change_boot_mode },
     { txt_l, 'l', __menu_list_boot_mode },
     { txt_a, 'a', __menu_toggle_atuoexec_en },
-    { txt_c, 'c', __menu_toggle_clock_mode },
+    { txt_c, 'c', __menu_change_clock_mode },
     { txt_t, 't', __menu_adjust_rtc },
     { txt_x, 'x', __menu_exit },
     { txt__, '?',[](){ menu_cmd.ShowMenu(); menu_cmd.giveCmdPrompt(); }}
